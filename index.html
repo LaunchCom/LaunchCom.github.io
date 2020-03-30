@@ -1,11 +1,206 @@
+
+
+
+
 <!DOCTYPE html>
 <html>
-<head>
-<title>test</title>
-</head>
-<body>
+	<head>
+		<title>Secrets</title>
+       <style>
+       body {
+	background-color: #000000;
+}
 
-<p>Test</p>
+header {
+	background-color: #ffcccc;
+	padding: 1px;
+}
 
-</body>
+p {
+	color: white;
+	font: italic bold 16px Georgia, serif;
+}
+
+img {
+	height: 80px;
+	width: 80px;
+	float: left;
+}
+
+h1 {
+	color: white;
+	font: italic bold 25px Georgia, serif;
+}
+			
+#input {
+	background-color: #000099;
+	color: #ff3300;
+	font: italic bold 10px/13px Georgia, serif;
+	height: 500px;
+	width: 100%;
+	padding: 5px;
+}
+
+#output {
+	background-color: #000099;
+	color: #ff3300;
+	font: italic bold 10px Georgia, serif;
+	height: 500px;
+	width: 100%;
+	border-radius: 5px;
+	padding: 5px;
+	overflow: scroll;
+}
+
+#button {
+	background-color: #ffcccc;
+	height: 30px;
+	width: 90px;
+	border-radius: 5px;
+	margin: 5px;
+	float: left;
+	padding: 8px;
+}
+
+      </style>
+	</head>
+	<body>
+	<header>
+	<img src="https://art.pixilart.com/7e695b2cd9f363e.png" alt="key" />
+	<h1>Share some secrets</h1>
+	</header>
+	<textarea id="input"></textarea>
+	<div id="button" onclick="encrypt()"><p>encrypt</p></div>
+	<div id="button" onclick="decrypt()"><p>decrypt</p></div>
+	<br /><br /><br /><br />
+	<div id="output"></div>
+	</body>
+<script>
+
+/* encryption 
+	extraction */
+
+var alpha = ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z","A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","‘","’","'"," ","-",".",",","!","?",";",":","(",")","/","&","$","[","]","£"];
+var limit = alpha.length;
+
+function numeric(l) {
+	var encrypt = [];
+	for (i of l) {
+		for (j of alpha) {
+			if (i == j) {
+				encrypt.push( alpha.indexOf(j) );
+			}
+		}
+	}
+	return encrypt;
+}
+
+function alphabetic(n) {
+	var decrypt = [];
+	for (i of n) {
+		for (j of alpha) {
+			if ( i == alpha.indexOf(j) ) {
+				decrypt.push(j);
+			}
+		}
+	}
+	return decrypt;
+}
+
+function caesarEncrypt(message, k) {
+	var coded = numeric(message);
+	var messLen = message.length;
+	for (i=0; i<=messLen; i++) {
+		var n = coded[i] + k;
+		if (n <= limit) {
+			coded[i] = n;
+		}
+		else {
+			coded[i] = n - (limit + 1);
+		}
+	}
+	return alphabetic(coded).join("");
+}
+
+function caesarDecrypt(message, k) {
+	var coded = numeric(message);
+	var messLen = message.length;
+	for (i=0; i<=messLen; i++) {
+		var n = coded[i] - k;
+		if (n >= 0) {
+			coded[i] = n;
+		}
+		else {
+			coded[i] = n + (limit + 1);
+		}
+	}
+	return alphabetic(coded).join("");
+}
+
+function vigenereEncrypt(message, k) {
+	var keyLen = k.length;
+	var messLen = message.length;
+	while (keyLen < messLen) {
+		k += k;
+		keyLen = k.length;
+	}
+	var lock = numeric(k);
+	var coded = numeric(message);
+	for (i=0; i<=messLen; i++) {
+		var n = coded[i] + lock[i];
+		if (n <= limit) {
+			coded[i] = n;
+		}
+		else {
+			coded[i] = n - (limit + 1);
+		}
+	}
+	return alphabetic(coded).join("");
+}
+
+function vigenereDecrypt(message, k) {
+	var keyLen = k.length;
+	var messLen = message.length;
+	while (keyLen < messLen) {
+		k += k;
+		keyLen = k.length;
+	}
+	var lock = numeric(k);
+	var coded = numeric(message);
+	for (i=0; i<=messLen; i++) {
+		var n = coded[i] - lock[i];
+		if (n >= 0) {
+			coded[i] = n;
+		}
+		else {
+			coded[i] = n + (limit + 1);
+		}
+	}
+	return alphabetic(coded).join("");
+}
+
+function hashAlg1(message, direction) {
+	if (direction == "encrypt") {
+		return caesarEncrypt( vigenereEncrypt( caesarEncrypt( vigenereEncrypt(message, "abc") , 1) , "ab") , 1);
+	}
+	else if (direction == "decrypt") {
+		return caesarDecrypt( vigenereDecrypt( caesarDecrypt( vigenereDecrypt(message, "abc") , 1) , "ab") , 1);
+	}
+}
+//end chunk1
+
+function encrypt() {
+	var secret = document.getElementById("input").value;
+	document.getElementById("output").innerHTML = hashAlg1(secret, "encrypt");
+}
+
+function decrypt() {
+	var secret = document.getElementById("input").value;
+	document.getElementById("output").innerHTML = hashAlg1(secret, "decrypt");
+}
+
+
+
+</script>
 </html>
+
