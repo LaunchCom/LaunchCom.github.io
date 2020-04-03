@@ -1,7 +1,3 @@
-
-
-
-
 <!DOCTYPE html>
 <html>
 	<head>
@@ -69,12 +65,17 @@ h1 {
 	<img src="https://art.pixilart.com/7e695b2cd9f363e.png" alt="key" />
 	<h1>Share some secrets</h1>
 	</header>
+
 	<textarea id="input"></textarea>
+
 	<div id="button" onclick="encrypt()"><p>encrypt</p></div>
 	<div id="button" onclick="decrypt()"><p>decrypt</p></div>
+        <div id="button" onclick="copy()"><p>copy</p></div>
 	<br /><br /><br /><br />
-	<div id="output"></div>
+
+	<textarea id="output"></textarea>
         <br /><br />
+
 	<p>rules</p>
 	<p>never use the characters " or £, and never use emojis </p>
 	<p>use the characters [ ] \ & $ cautiously</p>
@@ -82,7 +83,8 @@ h1 {
 <script>
 
 /* encryption 
-	extraction */
+   extraction 
+   Copy text */
 
 var alpha = ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z","A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","‘","’","'"," ","-",".",",","!","?",";",":","(",")","/","&","$","[","]","£"];
 var limit = alpha.length;
@@ -203,7 +205,14 @@ function decrypt() {
 	document.getElementById("output").innerHTML = hashAlg1(secret, "decrypt");
 }
 
+//end chunk2
 
+function copy() {
+      var copyText = document.getElementById("output");
+  copyText.select();
+  copyText.setSelectionRange(0, 99999)
+  document.execCommand("copy");
+}
 
 </script>
 </html>
