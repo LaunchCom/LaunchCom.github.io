@@ -58,6 +58,17 @@ h1 {
 	padding: 8px;
 }
 
+#select {
+       background-color: #ffcccc;
+       width: 150px;
+}
+
+#options {
+       background-color: #ffcccc;
+       width: 30px;
+       visibility: hidden;
+}
+
       </style>
 	</head>
 	<body>
@@ -76,13 +87,22 @@ h1 {
 
 	<textarea id="output"></textarea>
         <br /><br />
+
+        <div id="select" onclick="drop()"><p>Change Font Size</p></div>
+
+	<div id="options">
+	<div onclick="apply(10)"><p>10</p></div>
+	<div onclick="apply(15)"><p>15</p></div>
+	<div onclick="apply(25)"><p>25</p></div>
+	</div>
+
         </body>
 
 <script>
 
 /* encryption 
    extraction 
-   Copy text */
+   User help */
 
 var alpha = ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z","A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","‘","’","'"," ","-",".",",","!","?",";",":","(",")","\“","\”","\"","/","&","$","[","]","£"];
 var limit = alpha.length;
@@ -210,6 +230,21 @@ function copy() {
   copyText.select();
   copyText.setSelectionRange(0, 99999)
   document.execCommand("copy");
+}
+
+function apply(x) {
+	document.getElementById("input").style.fontSize = x + 'px';
+	document.getElementById("output").style.fontSize = x + 'px';
+	document.getElementById("options").style.visibility = "hidden";
+}
+
+function drop() {
+	if (document.getElementById("options").style.visibility == "hidden") {
+document.getElementById("options").style.visibility = "visible";
+}
+	else {
+		document.getElementById("options").style.visibility = "hidden";
+	}
 }
 
 </script>
